@@ -4,11 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { MoveRight, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { app } from "@/lib/firebase";
-import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 import { useAuth } from "@/components/ui/auth-provider";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { trackEvent } from "@/lib/analytics";
 
 function Hero() {
   const [titleNumber, setTitleNumber] = useState(0);
@@ -19,47 +18,29 @@ function Hero() {
     []
   );
 
-  const handleGetStartedClick = async () => {
-    if (typeof window !== "undefined") {
-      const supported = await isSupported();
-      if (supported) {
-        const analytics = getAnalytics(app);
-        logEvent(analytics, "cta_click", {
-          button_text: "Get Started",
-          location: "hero_section",
-          page_title: "Orbet - AI-Powered Recruitment Platform"
-        });
-      }
-    }
+  const handleGetStartedClick = () => {
+    trackEvent('cta_clicked', {
+      button_text: 'Get Started',
+      location: 'hero_section',
+      user_logged_in: !!user
+    });
   };
 
-  const handleResumeHiringClick = async () => {
-    if (typeof window !== "undefined") {
-      const supported = await isSupported();
-      if (supported) {
-        const analytics = getAnalytics(app);
-        logEvent(analytics, "cta_click", {
-          button_text: "Resume Hiring",
-          location: "hero_section",
-          page_title: "Orbet - AI-Powered Recruitment Platform"
-        });
-      }
-    }
-        router.push("/select-role");
+  const handleResumeHiringClick = () => {
+    trackEvent('cta_clicked', {
+      button_text: 'Resume Hiring',
+      location: 'hero_section',
+      user_logged_in: true
+    });
+    router.push("/select-role");
   };
 
-  const handleGetInTouchClick = async () => {
-    if (typeof window !== "undefined") {
-      const supported = await isSupported();
-      if (supported) {
-        const analytics = getAnalytics(app);
-        logEvent(analytics, "cta_click", {
-          button_text: "Get in touch",
-          location: "hero_section",
-          page_title: "Orbet - AI-Powered Recruitment Platform"
-        });
-      }
-    }
+  const handleGetInTouchClick = () => {
+    trackEvent('cta_clicked', {
+      button_text: 'Get in touch',
+      location: 'hero_section',
+      user_logged_in: !!user
+    });
   };
 
   useEffect(() => {

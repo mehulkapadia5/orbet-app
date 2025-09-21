@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import { Login03 } from "@/components/ui/login-03";
 import { useRouter } from "next/navigation";
+import { trackUserSignup, trackEvent } from "@/lib/analytics";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -21,11 +22,25 @@ export default function SignupPage() {
         setLoading(false);
         return;
       }
-          await createUserWithEmailAndPassword(auth, data.email, data.password);
-          router.push("/select-role");
+      
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user;
+      
+      trackUserSignup({
+        userId: user.uid,
+        email: user.email || '',
+        role: 'pending_selection'
+      });
+      
+      router.push("/select-role");
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
       setError(errorMessage);
+      
+      trackEvent('signup_failed', {
+        method: 'email',
+        error: errorMessage
+      });
     } finally {
       setLoading(false);
     }
@@ -35,12 +50,25 @@ export default function SignupPage() {
     setLoading(true);
     setError("");
 
-        try {
-          await signInWithPopup(auth, googleProvider);
-          router.push("/select-role");
-        } catch (error: unknown) {
+    try {
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const user = userCredential.user;
+      
+      trackUserSignup({
+        userId: user.uid,
+        email: user.email || '',
+        role: 'pending_selection'
+      });
+      
+      router.push("/select-role");
+    } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
       setError(errorMessage);
+      
+      trackEvent('signup_failed', {
+        method: 'google',
+        error: errorMessage
+      });
     } finally {
       setLoading(false);
     }

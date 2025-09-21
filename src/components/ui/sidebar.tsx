@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import { useAuth } from "@/components/ui/auth-provider";
 import { usePathname } from "next/navigation";
+import { trackEvent } from "@/lib/analytics";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   collapsible?: boolean;
@@ -74,6 +75,10 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                   <Link
                     key={item.title}
                     href={item.url}
+                    onClick={() => trackEvent('navigation_clicked', {
+                      page: item.title,
+                      url: item.url
+                    })}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2 transition-all",
                       item.isActive
@@ -104,7 +109,13 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                   size="sm"
                   asChild
                 >
-                  <Link href="/dashboard/create-job">
+                  <Link 
+                    href="/dashboard/create-job"
+                    onClick={() => trackEvent('quick_action_clicked', {
+                      action: 'Add Job Role',
+                      location: 'sidebar'
+                    })}
+                  >
                     <Plus className="h-4 w-4" />
                     <span className={cn(isCollapsed && "sr-only")}>Add Job Role</span>
                   </Link>
@@ -123,7 +134,12 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
             <Button
               variant="ghost"
               size="icon"
-              onClick={logout}
+              onClick={() => {
+                trackEvent('user_logout', {
+                  location: 'sidebar'
+                });
+                logout();
+              }}
               className={cn("h-8 w-8", isCollapsed && "mx-auto")}
             >
               <LogOut className="h-4 w-4" />

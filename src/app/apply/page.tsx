@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { trackJobApplication, trackEvent } from "@/lib/analytics";
 
 interface JobData {
   id: string;
@@ -105,6 +106,13 @@ function ApplyPageContent() {
           : job
       );
       localStorage.setItem('jobs', JSON.stringify(updatedJobs));
+
+      // Track job application
+      trackJobApplication({
+        jobId: jobId,
+        jobName: jobData?.name || 'Unknown',
+        applicantId: newApplicantId
+      });
 
       setSubmitted(true);
     } catch (error) {

@@ -9,6 +9,7 @@ import {
   ClipboardCheck, 
   ArrowRight
 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 export default function OnboardingPage() {
   const [selectedRole, setSelectedRole] = useState<string>("");
@@ -32,12 +33,21 @@ export default function OnboardingPage() {
 
   const handleRoleSelection = (roleId: string) => {
     setSelectedRole(roleId);
+    trackEvent('role_selected', {
+      role: roleId,
+      page: 'select_role'
+    });
   };
 
   const handleContinue = async () => {
     if (!selectedRole) return;
     
     setIsLoading(true);
+    
+    trackEvent('role_confirmed', {
+      role: selectedRole,
+      page: 'select_role'
+    });
     
     // Here you would typically save the role to user profile/database
     // For now, we'll just simulate a delay and redirect

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
+import { trackJobCreated, trackEvent } from "@/lib/analytics";
 
 export default function CreateJobPage() {
   const router = useRouter();
@@ -64,6 +65,14 @@ export default function CreateJobPage() {
       const existingJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
       existingJobs.push(newJob);
       localStorage.setItem('jobs', JSON.stringify(existingJobs));
+
+      // Track job creation
+      trackJobCreated({
+        jobId: jobId,
+        jobName: jobData.name,
+        department: jobData.department,
+        experienceLevel: jobData.experienceLevel
+      });
 
       // Redirect to job roles page
       router.push('/dashboard/job-roles');
