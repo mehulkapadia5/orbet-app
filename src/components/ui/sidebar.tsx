@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import {
   LayoutDashboard,
   Briefcase,
@@ -167,6 +167,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         {/* Mobile Sidebar */}
         <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
           <SheetContent side="left" className="p-0">
+            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <SidebarContent />
           </SheetContent>
         </Sheet>
