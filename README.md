@@ -17,6 +17,7 @@ A comprehensive job creation and application management system built with Next.j
 
 - **Framework**: Next.js 15 with App Router
 - **Authentication**: Firebase Authentication
+- **Analytics**: PostHog for user behavior tracking
 - **UI Components**: shadcn/ui with Tailwind CSS
 - **Icons**: Lucide React
 - **Deployment**: Firebase Hosting with static export
@@ -51,12 +52,17 @@ yarn install
 Create a `.env.local` file in the root directory:
 
 ```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
+
+# PostHog Analytics
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_project_api_key
+NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 ```
 
 ### 4. Run Development Server
@@ -69,6 +75,15 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
+### 5. PostHog Setup (Optional)
+
+To enable analytics tracking:
+
+1. Create a PostHog account at [posthog.com](https://posthog.com)
+2. Get your project API key from PostHog dashboard
+3. Add the PostHog key to your `.env.local` file
+4. Analytics will automatically track user behavior and events
+
 ## 📁 Project Structure
 
 ```
@@ -80,8 +95,9 @@ src/
 │   ├── signup/
 │   └── select-role/      # Role selection onboarding
 ├── components/           # Reusable UI components
-│   └── ui/              # shadcn/ui components
-└── lib/                 # Utility functions and Firebase config
+│   ├── ui/              # shadcn/ui components
+│   └── providers/       # Context providers (PostHog, Auth)
+└── lib/                 # Utility functions, Firebase config, and analytics
 ```
 
 ## 🎯 Key Pages

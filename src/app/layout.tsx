@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { FirebaseAnalytics } from "@/components/ui/firebase-analytics";
 import { AuthProvider } from "@/components/ui/auth-provider";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,10 +37,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          {children}
-          <FirebaseAnalytics />
-        </AuthProvider>
+        <PostHogProvider>
+          <AuthProvider>
+            {children}
+            <FirebaseAnalytics />
+          </AuthProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
