@@ -9,11 +9,13 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    initPostHog()
+    if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+      initPostHog()
+    }
   }, [])
 
   useEffect(() => {
-    if (pathname && typeof window !== 'undefined') {
+    if (pathname && typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
       let url = window.origin + pathname
       if (searchParams.toString()) {
         url = url + `?${searchParams.toString()}`

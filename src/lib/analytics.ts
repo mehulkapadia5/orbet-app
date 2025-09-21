@@ -3,19 +3,19 @@
 import { posthog } from '@/lib/posthog'
 
 export const trackEvent = (eventName: string, properties?: Record<string, any>) => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
     posthog.capture(eventName, properties)
   }
 }
 
 export const identifyUser = (userId: string, properties?: Record<string, any>) => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
     posthog.identify(userId, properties)
   }
 }
 
 export const resetUser = () => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
     posthog.reset()
   }
 }
